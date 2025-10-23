@@ -55,7 +55,7 @@ Certifique-se de que o Appium está em execução e que o dispositivo (emulador 
 
 ## 📂 Estrutura do Projeto
 
-markx-tests/
+markX/
 ├── libs/
 │   └── mongo.py                  # Biblioteca customizada para manipulação do MongoDB
 ├── resources/
