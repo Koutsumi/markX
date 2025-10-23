@@ -55,6 +55,7 @@ Certifique-se de que o Appium está em execução e que o dispositivo (emulador 
 
 ## 📂 Estrutura do Projeto
 
+```txt
 markX/
 ├── libs/
 │   └── mongo.py                  # Biblioteca customizada para manipulação do MongoDB
@@ -67,6 +68,7 @@ markX/
 ├── .env                          # Variáveis de ambiente (não versionar)
 ├── requirements.txt              # Dependências do projeto
 └── README.md                     # Documentação do projeto
+```
 
 ## 🙋‍♀️ Créditos
 Este projeto foi desenvolvido durante o curso Robot Framework e Appium para Android e iOS com Fernando Papito.
