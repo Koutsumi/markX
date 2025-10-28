@@ -81,7 +81,7 @@ jobs:
           profile: pixel_6_pro
           script: |
             avdmanager list device
-            robot -d ./results ./tests.
+            robot -d ./results ./tests
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
