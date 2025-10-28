@@ -7,7 +7,7 @@ Library           AppiumLibrary
 Do login
     [Documentation]    Keyword to perform login action.
     
-    Input Text        xpath=//*[@resource-id="apiIp"]    192.168.15.132    
+    Input Text        xpath=//*[@resource-id="apiIp"]    %{API_HOST}    
     Click Element     xpath=//*[@resource-id="signInButton"]    
     
     Wait Until Page Contains    Minhas tarefas    10
