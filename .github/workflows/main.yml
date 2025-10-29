@@ -55,9 +55,6 @@ jobs:
           npm install
           nohup npm start &
 
-      - name: Check Appium status
-        run: curl http://localhost:4723/status
-
       - name: Capture machine IP and set as env variable
         run: |
           IP=$(hostname -I | awk '{print $1}')
@@ -74,6 +71,9 @@ jobs:
       - name: Start up Appium
         run: |
           nohup appium  &
+
+      - name: Check Appium status
+        run: curl http://localhost:4723/status
 
       - name: Install Android SDK system image
         run: |
