@@ -37,6 +37,38 @@ jobs:
         run:
           pip install -r requirements.txt
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Instalar dependências da API
+        working-directory: ./apps/api
+        run: npm install
+      
+      - name: Iniciar API do markX
+        working-directory: ./apps/api
+        run: |
+          nohup npx babel-node build/app.js dev > api.log 2>&1 &
+          sleep 15
+      
+      - name: Verificar logs da API
+        run: cat ./apps/api/api.log
+      
+      - name: Verificar se a porta 3333 está escutando
+        run: netstat -tuln | grep 3333 || echo "Porta 3333 não está aberta"
+      
+      - name: Testar conexão com a API (IP dinâmico)
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "Testando conexão com http://$IP:3333/status"
+          curl http://$IP:3333/status || echo "API não respondeu"
+
+      - name: Capture machine IP and set as env variable
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "API_HOST=$IP" >> $GITHUB_ENV
+          
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -45,30 +77,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-
-      - name: Install API dependencies
-        working-directory: ./apps/api
-        run: npm install
-      
-      - name: Start Node API
-        working-directory: ./apps/api
-        run: |
-          nohup npm start dev > api.log 2>&1 &
-          sleep 10
-
-      - name: Check API status
-        run: curl http://localhost:3333/status || echo "API não respondeu"
-
-      - name: Capture machine IP and set as env variable
-        run: |
-          IP=$(hostname -I | awk '{print $1}')
-          echo "API_HOST=$IP" >> $GITHUB_ENV
-
       - name: Install Appium
         run: |
           npm install -g appium
