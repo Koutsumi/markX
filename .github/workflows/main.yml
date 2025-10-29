@@ -7,9 +7,25 @@ on:
 jobs:
   execute_test:
     runs-on: ubuntu-latest
+    environment: development
+    env:
+      APP_URL: ${{ vars.APP_URL }}
+      DEVICE_UUID: ${{ vars.DEVICE_UUID }}
+      MOBILE_APP_PATH: ${{ vars.MOBILE_APP_PATH }}
+      MOBILE_AUTOMATION_NAME: ${{ vars.MOBILE_AUTOMATION_NAME }}
+      MOBILE_DEVICE_NAME: ${{ vars.MOBILE_DEVICE_NAME }}
+      MOBILE_PLATFORM_NAME: ${{ vars.MOBILE_PLATFORM_NAME }}
+      MONGO_PROJECT: ${{ vars.MONGO_PROJECT }}
+      MONGO_PASSWORD: ${{vars.MONGO_PASSWORD}}
+      MONGO_URI: ${{vars.MONGO_URI}}
+      PORT: 3333
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Debug APP_URL
+        run: echo "APP_URL=$APP_URL"
+
 
       - name: Use Python 3.14
         uses: actions/setup-python@v5
@@ -21,6 +37,38 @@ jobs:
         run:
           pip install -r requirements.txt
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Instalar dependências da API
+        working-directory: ./apps/api
+        run: npm install
+      
+      - name: Iniciar API do markX
+        working-directory: ./apps/api
+        run: |
+          nohup npm start > api.log 2>&1 &
+          sleep 15
+      
+      - name: Verificar logs da API
+        run: cat ./apps/api/api.log
+      
+      - name: Verificar se a porta 3333 está escutando
+        run: netstat -tuln | grep 3333 || echo "Porta 3333 não está aberta"
+      
+      - name: Testar conexão com a API (IP dinâmico)
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "Testando conexão com http://$IP:3333/status"
+          curl http://$IP:3333/status || echo "API não respondeu"
+
+      - name: Capture machine IP and set as env variable
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "API_HOST=$IP" >> $GITHUB_ENV
+          
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -29,23 +77,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-
-      - name: Start Node API
-        working-directory: ./apps/api
-        run: |
-          npm install
-          nohup npm start &
-
-      - name: Capture machine IP and set as env variable
-        run: |
-          IP=$(hostname -I | awk '{print $1}')
-          echo "API_HOST=$IP" >> $GITHUB_ENV
-
       - name: Install Appium
         run: |
           npm install -g appium
@@ -57,6 +88,9 @@ jobs:
       - name: Start up Appium
         run: |
           nohup appium  &
+
+      - name: Check Appium status
+        run: curl http://localhost:4723/status
 
       - name: Install Android SDK system image
         run: |
@@ -81,7 +115,7 @@ jobs:
           profile: pixel_6_pro
           script: |
             avdmanager list device
-            robot -d ./results ./tests.
+            robot -d ./results ./tests
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
