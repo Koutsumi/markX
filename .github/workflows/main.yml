@@ -49,7 +49,7 @@ jobs:
       - name: Iniciar API do markX
         working-directory: ./apps/api
         run: |
-          nohup npx babel-node build/app.js dev > api.log 2>&1 &
+          nohup npm start > api.log 2>&1 &
           sleep 15
       
       - name: Verificar logs da API
