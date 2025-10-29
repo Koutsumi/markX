@@ -7,6 +7,15 @@ on:
 jobs:
   execute_test:
     runs-on: ubuntu-latest
+    env:
+      APP_URL: ${{ vars.APP_URL }}
+      DEVICE_UUID: ${{ vars.DEVICE_UUID }}
+      MOBILE_APP_PATH: ${{ vars.MOBILE_APP_PATH }}
+      MOBILE_AUTOMATION_NAME: ${{ vars.MOBILE_AUTOMATION_NAME }}
+      MOBILE_DEVICE_NAME: ${{ vars.MOBILE_DEVICE_NAME }}
+      MOBILE_PLATFORM_NAME: ${{ vars.MOBILE_PLATFORM_NAME }}
+      MONGO_PROJECT: ${{ vars.MONGO_PROJECT }}
+      MONGO_PASSWORD: ${{vars.MONGO_PASSWORD}}
 
     steps:
       - uses: actions/checkout@v4
