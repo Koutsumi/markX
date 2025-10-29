@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug APP_URL
+        run: echo "APP_URL=$APP_URL"
+
+
       - name: Use Python 3.14
         uses: actions/setup-python@v5
         with:
@@ -49,6 +53,9 @@ jobs:
         run: |
           npm install
           nohup npm start &
+
+      - name: Check Appium status
+        run: curl http://localhost:4723/status
 
       - name: Capture machine IP and set as env variable
         run: |
