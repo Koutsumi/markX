@@ -17,6 +17,7 @@ jobs:
       MOBILE_PLATFORM_NAME: ${{ vars.MOBILE_PLATFORM_NAME }}
       MONGO_PROJECT: ${{ vars.MONGO_PROJECT }}
       MONGO_PASSWORD: ${{vars.MONGO_PASSWORD}}
+      MONGO_URI: ${{vars.MONGO_URI}}
 
     steps:
       - uses: actions/checkout@v4
