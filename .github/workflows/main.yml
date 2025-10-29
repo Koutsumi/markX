@@ -58,7 +58,7 @@ jobs:
       - name: Start Node API
         working-directory: ./apps/api
         run: |
-          nohup npm start dev &
+          nohup npx babel-node build/app.js dev > api.log 2>&1 &
           sleep 10
 
       - name: Check API status
