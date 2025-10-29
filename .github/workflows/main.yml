@@ -49,11 +49,19 @@ jobs:
         with:
           node-version: 'lts/*'
 
+      - name: Install API dependencies
+        working-directory: ./apps/api
+        run: npm install
+      
+      - name: Build API with Babel
+        working-directory: ./apps/api
+        run: npx babel src --out-dir build
+      
       - name: Start Node API
         working-directory: ./apps/api
         run: |
-          npm install
-          nohup npm start &
+          nohup npm start > api.log 2>&1 &
+          sleep 10
 
       - name: Capture machine IP and set as env variable
         run: |
