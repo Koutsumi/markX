@@ -18,6 +18,7 @@ jobs:
       MONGO_PROJECT: ${{ vars.MONGO_PROJECT }}
       MONGO_PASSWORD: ${{vars.MONGO_PASSWORD}}
       MONGO_URI: ${{vars.MONGO_URI}}
+      PORT: 3333
 
     steps:
       - uses: actions/checkout@v4
@@ -57,11 +58,11 @@ jobs:
       - name: Start Node API
         working-directory: ./apps/api
         run: |
-          nohup npm start > api.log 2>&1 &
+          nohup npm start dev &
           sleep 10
 
       - name: Check API status
-        run: curl http://localhost:3000/status || echo "API não respondeu"
+        run: curl http://localhost:3333/status || echo "API não respondeu"
 
       - name: Capture machine IP and set as env variable
         run: |
