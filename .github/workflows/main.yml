@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  execute_test:
+  app-test:
     runs-on: ubuntu-latest
     environment: development
     env:
@@ -22,10 +22,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Debug APP_URL
-        run: echo "APP_URL=$APP_URL"
-
 
       - name: Use Python 3.14
         uses: actions/setup-python@v5
@@ -51,12 +47,6 @@ jobs:
         run: |
           nohup npm start > api.log 2>&1 &
           sleep 15
-      
-      - name: Verificar logs da API
-        run: cat ./apps/api/api.log
-      
-      - name: Verificar se a porta 3333 está escutando
-        run: netstat -tuln | grep 3333 || echo "Porta 3333 não está aberta"
       
       - name: Testar conexão com a API (IP dinâmico)
         run: |
